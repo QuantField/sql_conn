@@ -61,7 +61,7 @@ class SqlConn:
             raise EnvironmentError(self.conn)
         print("database connection successfully closed")
         if self.save_db is False:
-            print("deleting databse {}...".format(self.dbname))
+            print("deleting database {}...".format(self.dbname))
             os.remove(self.dbname)
 
 
