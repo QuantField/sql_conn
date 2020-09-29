@@ -21,8 +21,10 @@ class SqlConn:
             if os.path.isfile(dbname) and self.save_db is False:
                 os.remove(dbname)
             self.conn      = sqlite3.connect(self.dbname)
+            print("Database Connection established successfully")
         else:            
             self.conn = sqlite3.connect(":memory:")
+            print("In memory Connection established successfully")
         self.cursor    = self.conn.cursor()
         self.max_rows = 100        
 
