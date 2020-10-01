@@ -25,14 +25,9 @@ class SqlConn:
         else:            
             self.conn = sqlite3.connect(":memory:")
             print("In memory Connection established successfully")
-        self.cursor    = self.conn.cursor()
-        self.max_rows = 100        
-
-
-    def set_max_rows(self):
-        pd.set_option('display.max_rows', self.max_rows)
-
+        self.cursor    = self.conn.cursor()   
     
+
     def query(self, query):
         """ Runs queries
         For select queries a pandas dataframe is returned
@@ -43,16 +38,16 @@ class SqlConn:
         Returns:
             pandas dataframe (for select queries): result of the query
         """
-        if query.strip().upper().find('SELECT')== 0 :
-            self.set_max_rows()
-            return self.fetch(query)
+        if query.strip().upper().find('SELECT')== 0 :            
+            return pd.read_sql_query(query, self.conn)
         else:
             self.cursor.execute(query)
             self.conn.commit()
 
-    
-    def fetch(self,query):
-        return pd.read_sql_query(query, self.conn)
+
+    def save_table(self, table_name, csv_file_name):
+        df = self.query("select * from {table}".format(table=table_name))
+        df.to_csv(csv_file_name, index=False)
 
     
     def upload(self,df, tablename):
@@ -62,7 +57,12 @@ class SqlConn:
             df (pandas dataframe): dataframe to upload to database
             tablename (str): name of table refereing to the uploaded dataframe 
         """
-        df.to_sql(tablename,con=self.conn, index=None)
+        try:
+            df.to_sql(tablename,con=self.conn, index=None)
+        except:
+            print("Dataframe upload failed")
+        else:
+            print("Upload succsessful")
     
     
     def quit(self):
@@ -79,8 +79,3 @@ class SqlConn:
             if self.save_db is False:
                 print("deleting database {}...".format(self.dbname))
                 os.remove(self.dbname)
-
-
-
-
-
