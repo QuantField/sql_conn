@@ -45,9 +45,14 @@ class SqlConn:
             self.conn.commit()
 
 
-    def save_table(self, table_name, csv_file_name):
+    def to_csv(self, table_name, file_name):
         df = self.query("select * from {table}".format(table=table_name))
-        df.to_csv(csv_file_name, index=False)
+        df.to_csv(file_name, index=False)
+    
+    
+    def upload_csv(self, file_name, table_name):
+        df = pd.read_csv(file_name)
+        self.upload(df, table_name)
 
     
     def upload(self,df, tablename):
