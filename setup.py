@@ -1,5 +1,4 @@
-from distutils.core import setup
-from setuptools import find_packages
+from setuptools import setup, find_packages
 
 setup(
     name="sqlconn",
@@ -9,10 +8,13 @@ setup(
     url="https://https://github.com/QuantField/sql_conn/",
     license="MIT",
     packages=find_packages(),    
+    package_dir={"sqlconn": "sqlconn"},
+    package_data={"sqlconn": ["data/*.csv"]},
     description="Wrapper for Sqlite",
-    long_description=open("README.rst").read(),
+    long_description="Wrapper for Sqlite",
     install_requires=['pandas'],
     classifiers=[
         "License :: OSI Approved :: MIT License",
     ],
 )
+
