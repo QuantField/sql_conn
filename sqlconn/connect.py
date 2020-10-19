@@ -55,15 +55,18 @@ class SqlConn:
         self.upload(df, table_name)
 
     
-    def upload(self,df, tablename):
+    def upload(self,df, tablename, overwrite = True, append= False):
         """Saving pandas dataframe to a table in the database
 
         Args:
             df (pandas dataframe): dataframe to upload to database
             tablename (str): name of table refereing to the uploaded dataframe 
         """
-        try:
-            df.to_sql(tablename,con=self.conn, index=None)
+        mode = 'replace'
+        if append == True:
+            mode = 'append'    
+        try: 
+            df.to_sql(tablename,con=self.conn, index=None, if_exists = mode)
         except:
             print("Dataframe upload failed")
         else:
